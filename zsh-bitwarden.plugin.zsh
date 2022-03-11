@@ -1,7 +1,7 @@
-local DELIMITER='\t'
+ZSH_BITWARDEN_DELIMITER='\t'
 
 function bw-select() {
-	touch /tmp/bw_items && chmod 0700 /tmp/bw_items && bw list items --nointeraction > /tmp/bw_items && cat /tmp/bw_items | jq -r ".[] | [.name, $1] | join(\"$DELIMITER\")" | fzf -n 1 --with-nth 1 -d "$DELIMITER"
+	touch /tmp/bw_items && chmod 0700 /tmp/bw_items && bw list items --nointeraction > /tmp/bw_items && cat /tmp/bw_items | jq -r ".[] | [.name, $1] | join(\"$ZSH_BITWARDEN_DELIMITER\")" | fzf -n 1 --with-nth 1 -d "$ZSH_BITWARDEN_DELIMITER"
 }
 
 function bw-get() {
@@ -11,7 +11,7 @@ function bw-get() {
 	bw_item=$(bw-select $1)
 	res=$?
 	if [ $res -eq 0 ]; then
-		result=$(echo "$bw_item" | awk -F "$DELIMITER" '{print $2}')
+		result=$(echo "$bw_item" | awk -F "$ZSH_BITWARDEN_DELIMITER" '{print $2}')
 	elif [ $res -eq 1 ]; then
 		echo
 		zle reset-prompt
@@ -29,30 +29,30 @@ function bw-copy() {
 	bw_item=$(bw-select $1)
 	res=$?
 	if [ $res -eq 0 ]; then
-		echo "$bw_item" | awk -F $DELIMITER '{print $2}' | eval "$COPY_CMD"
+		echo "$bw_item" | awk -F $ZSH_BITWARDEN_DELIMITER '{print $2}' | eval "$COPY_CMD"
 	elif [ $res -eq 1 ]; then
 		echo
 		zle reset-prompt
 	fi
 }
 
-local USERNAME_PATH=".login.username"
-local PASSWORD_PATH=".login.password"
+ZSH_BITWARDEN_USERNAME_PATH=".login.username"
+ZSH_BITWARDEN_PASSWORD_PATH=".login.password"
 
 function bw-get-username() {
-	bw-get $USERNAME_PATH
+	bw-get $ZSH_BITWARDEN_USERNAME_PATH
 }
 
 function bw-get-password() {
-	bw-get $PASSWORD_PATH
+	bw-get $ZSH_BITWARDEN_PASSWORD_PATH
 }
 
 function bw-copy-username() {
-	bw-copy $USERNAME_PATH
+	bw-copy $ZSH_BITWARDEN_USERNAME_PATH
 }
 
 function bw-copy-password() {
-	bw-copy $PASSWORD_PATH
+	bw-copy $ZSH_BITWARDEN_PASSWORD_PATH
 }
 
 zle -N bw-get-username

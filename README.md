@@ -18,6 +18,7 @@ Upon selecting an item either the username or password will be either written in
 ## Key bindings
 
 | Keys | Action |
+| ---- | ------ |
 | <kbd>alt</kbd>+<kbd>U</kbd> | Get username |
 | <kbd>alt</kbd>+<kbd>P</kbd> | Get password |
 | <kbd>ctrl</kbd>+<kbd>U</kbd> | Copy username |

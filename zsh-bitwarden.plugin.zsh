@@ -1,20 +1,19 @@
 ZSH_BITWARDEN_DELIMITER='\t'
 
 function .bw_select() {
-	local result=$(bw list items --nointeraction | jq -r ".[] | [.name, $1] | join(\"$ZSH_BITWARDEN_DELIMITER\")")
-	echo "$result" | fzf -n 1 --with-nth 1 -d "$ZSH_BITWARDEN_DELIMITER"
+	jq -r ".[] | [.name, $1] | join(\"$ZSH_BITWARDEN_DELIMITER\")" <(bw list items --nointeraction 2>&/dev/null) | fzf -0 -n 1 --with-nth 1 -d "$ZSH_BITWARDEN_DELIMITER"
 }
 
 function .bw_get() {
 	local bw_items
-	local res
+	local rc
 	local result
 	bw_item=$(.bw_select $1)
-	res=$?
-	if [ $res -eq 0 ]; then
+	rc=$?
+	if [ $rc -eq 0 ]; then
 		result=$(echo "$bw_item" | awk -F "$ZSH_BITWARDEN_DELIMITER" '{print $2}')
-	elif [ $res -eq 1 ]; then
-		echo
+	elif [ $rc -eq 1 ]; then
+		echo "\nVault is locked.\n" >&2
 		zle reset-prompt
 	fi
 	if [ ! -z "$result" ]; then
@@ -25,13 +24,13 @@ function .bw_get() {
 function .bw_copy() {
 	local copy_cmd=${ZSH_BITWARDEN_COPY_CMD:-xclip -r}
 	local bw_items
-	local res
+	local rc
 	bw_item=$(.bw_select $1)
-	res=$?
-	if [ $res -eq 0 ]; then
+	rc=$?
+	if [ $rc -eq 0 ]; then
 		echo "$bw_item" | awk -F $ZSH_BITWARDEN_DELIMITER '{print $2}' | eval "$copy_cmd"
-	elif [ $res -eq 1 ]; then
-		echo
+	elif [ $rc -eq 1 ]; then
+		echo "\nVault is locked.\n" >&2
 		zle reset-prompt
 	fi
 }

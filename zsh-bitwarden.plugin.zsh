@@ -1,7 +1,7 @@
 local DELIMITER='\t'
 
 function bw-select() {
-	touch /tmp/bw_items && chmod 0700 /tmp/bw_items && bw list items --nointeraction > /tmp/bw_items && cat /tmp/bw_items | jq -r ".[] | [.name, $1, .login.password] | join(\"$DELIMITER\")" | fzf -n 1 --with-nth 1 -d "$DELIMITER"
+	touch /tmp/bw_items && chmod 0700 /tmp/bw_items && bw list items --nointeraction > /tmp/bw_items && cat /tmp/bw_items | jq -r ".[] | [.name, $1] | join(\"$DELIMITER\")" | fzf -n 1 --with-nth 1 -d "$DELIMITER"
 }
 
 function bw-get() {
@@ -26,7 +26,7 @@ local COPY_CMD=${ZSH_BITWARDEN_COPY_CMD:-xclip -r}
 function bw-copy() {
 	local bw_items
 	local res
-	bw_item=$(bw-select)
+	bw_item=$(bw-select $1)
 	res=$?
 	if [ $res -eq 0 ]; then
 		echo "$bw_item" | awk -F $DELIMITER '{print $2}' | eval "$COPY_CMD"

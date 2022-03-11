@@ -1,7 +1,7 @@
 ZSH_BITWARDEN_DELIMITER='\t'
 
 function bw-select() {
-	touch /tmp/bw_items && chmod 0700 /tmp/bw_items && bw list items --nointeraction > /tmp/bw_items && cat /tmp/bw_items | jq -r ".[] | [.name, $1] | join(\"$ZSH_BITWARDEN_DELIMITER\")" | fzf -n 1 --with-nth 1 -d "$ZSH_BITWARDEN_DELIMITER"
+	touch /tmp/bw_items && chmod 0600 /tmp/bw_items && bw list items --nointeraction > /tmp/bw_items && cat /tmp/bw_items | jq -r ".[] | [.name, $1] | join(\"$ZSH_BITWARDEN_DELIMITER\")" | fzf -n 1 --with-nth 1 -d "$ZSH_BITWARDEN_DELIMITER"
 }
 
 function bw-get() {

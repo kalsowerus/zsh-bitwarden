@@ -1,6 +1,6 @@
 # Dependencies
 
-- Bitwarden CLI
+- [Bitwarden CLI](https://github.com/bitwarden/cli)
 - jq
 - fzf
 - xclip (or alternative, see configuration below)

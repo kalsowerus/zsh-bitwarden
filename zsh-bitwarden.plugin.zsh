@@ -21,15 +21,14 @@ function bw-get() {
 	fi
 }
 
-local COPY_CMD=${ZSH_BITWARDEN_COPY_CMD:-xclip -r}
-
 function bw-copy() {
+	local copy_cmd=${ZSH_BITWARDEN_COPY_CMD:-xclip -r}
 	local bw_items
 	local res
 	bw_item=$(bw-select $1)
 	res=$?
 	if [ $res -eq 0 ]; then
-		echo "$bw_item" | awk -F $ZSH_BITWARDEN_DELIMITER '{print $2}' | eval "$COPY_CMD"
+		echo "$bw_item" | awk -F $ZSH_BITWARDEN_DELIMITER '{print $2}' | eval "$copy_cmd"
 	elif [ $res -eq 1 ]; then
 		echo
 		zle reset-prompt

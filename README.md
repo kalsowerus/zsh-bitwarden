@@ -12,7 +12,7 @@ antigen bundle kalsowerus/zsh-bitwarden
 ```
 
 # Usage
-Opens a fzf widget containing you Bitwarden vault items.
+Opens a fzf widget containing your Bitwarden vault items.
 Upon selecting an item either the username or password will be either written into the shell or copied into the clipboard.
 
 ## Key bindings

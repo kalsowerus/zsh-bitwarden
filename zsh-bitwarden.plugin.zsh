@@ -1,10 +1,28 @@
 ZSH_BITWARDEN_DELIMITER='\t'
 
+function .bw_ensure_unlocked() {
+	local bw_status=$(bw status | jq -r '.status')
+	if [ $bw_status = 'locked' ]; then
+		zle -I
+		read -s 'reply?? Master password: [input is hidden] ' < /dev/tty
+		echo
+		local key=$(bw unlock "$reply" --raw)
+		export BW_SESSION="$key"
+	elif [ $bw_status = 'unauthenticated' ]; then
+		zle -I
+		echo 'You are not logged in.'
+		return 1
+	fi
+}
+
 function .bw_select() {
 	jq -r ".[] | [.name, $1] | join(\"$ZSH_BITWARDEN_DELIMITER\")" <(bw list items --nointeraction 2>&/dev/null) | fzf -0 -n 1 --with-nth 1 -d "$ZSH_BITWARDEN_DELIMITER"
 }
 
 function .bw_get() {
+	if ! .bw_ensure_unlocked; then
+		return
+	fi
 	local bw_items
 	local rc
 	local result
@@ -22,6 +40,9 @@ function .bw_get() {
 }
 
 function .bw_copy() {
+	if ! .bw_ensure_unlocked; then
+		return
+	fi
 	local copy_cmd=${ZSH_BITWARDEN_COPY_CMD:-xclip -r}
 	local bw_items
 	local rc

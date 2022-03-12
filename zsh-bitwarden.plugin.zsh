@@ -1,7 +1,7 @@
 ZSH_BITWARDEN_DELIMITER='\t'
 
 function .bw_ensure_unlocked() {
-	local bw_status=$(bw status | jq -r '.status')
+	local bw_status=$(bw status 2>/dev/null | jq -r '.status')
 	if [ $bw_status = 'locked' ]; then
 		zle -I
 		read -s 'reply?? Master password: [input is hidden] ' < /dev/tty

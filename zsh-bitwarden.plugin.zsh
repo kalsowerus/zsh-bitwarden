@@ -3,7 +3,14 @@ ZSH_BITWARDEN_DELIMITER='\t'
 function .bw_ensure_unlocked() {
 	local session=$(cat "$HOME/.bwsession" 2>/dev/null)
 	local bw_status=$(bw status --session "$session" 2>/dev/null | jq -r '.status')
+
 	if [ $bw_status = 'locked' ]; then
+		# workaround for https://github.com/bitwarden/cli/issues/480
+		if bw list folders --nointeraction --session "$session" >/dev/null 2>&1; then
+			return 0
+		fi
+		# end workaround
+
 		zle -I
 		read -s 'reply?? Master password: [input is hidden] ' < /dev/tty
 		echo

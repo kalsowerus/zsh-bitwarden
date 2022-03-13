@@ -1,13 +1,15 @@
 ZSH_BITWARDEN_DELIMITER='\t'
 
 function .bw_ensure_unlocked() {
-	local bw_status=$(bw status 2>/dev/null | jq -r '.status')
+	local session=$(cat "$HOME/.bwsession" 2>/dev/null)
+	local bw_status=$(bw status --session "$session" 2>/dev/null | jq -r '.status')
 	if [ $bw_status = 'locked' ]; then
 		zle -I
 		read -s 'reply?? Master password: [input is hidden] ' < /dev/tty
 		echo
 		local key=$(bw unlock "$reply" --raw)
-		export BW_SESSION="$key"
+		echo "$key" > "$HOME/.bwsession"
+		chmod 0600 "$HOME/.bwsession"
 	elif [ $bw_status = 'unauthenticated' ]; then
 		zle -I
 		echo 'You are not logged in.'
@@ -16,7 +18,8 @@ function .bw_ensure_unlocked() {
 }
 
 function .bw_select() {
-	jq -r ".[] | [.name, $1] | join(\"$ZSH_BITWARDEN_DELIMITER\")" <(bw list items --nointeraction 2>&/dev/null) | fzf -0 -n 1 --with-nth 1 -d "$ZSH_BITWARDEN_DELIMITER"
+	local session=$(cat "$HOME/.bwsession" 2>/dev/null)
+	jq -r ".[] | [.name, $1] | join(\"$ZSH_BITWARDEN_DELIMITER\")" <(bw list items --session "$session" --nointeraction 2>&/dev/null) | fzf -0 -n 1 --with-nth 1 -d "$ZSH_BITWARDEN_DELIMITER"
 }
 
 function .bw_get() {

@@ -46,13 +46,13 @@ function .bw_copy() {
 	if ! .bw_ensure_unlocked; then
 		return
 	fi
-	local copy_cmd=${ZSH_BITWARDEN_COPY_CMD:-xclip -r}
+	local copy_cmd=${ZSH_BITWARDEN_COPY_CMD:-xclip}
 	local bw_items
 	local rc
 	bw_item=$(.bw_select $1)
 	rc=$?
 	if [ $rc -eq 0 ]; then
-		echo "$bw_item" | awk -F $ZSH_BITWARDEN_DELIMITER '{print $2}' | eval "$copy_cmd"
+		echo -n "$bw_item" | awk -F $ZSH_BITWARDEN_DELIMITER '{printf "%s",$2}' | eval "$copy_cmd"
 	elif [ $rc -eq 1 ]; then
 		echo "\nVault is locked.\n" >&2
 		zle reset-prompt

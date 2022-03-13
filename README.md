@@ -31,7 +31,7 @@ Upon selecting an item either the username or password will be either written in
 Contains the command used to copy a username/password to the clipboard.
 The username/password will be piped to the command.
 
-Default: `xclip -r`
+Default: `xclip`
 
 ## `ZSH_BITWARDEN_GET_USERNAME_KEY`
 

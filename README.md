@@ -15,6 +15,8 @@ antigen bundle kalsowerus/zsh-bitwarden
 Opens a fzf widget containing your Bitwarden vault items.
 Upon selecting an item either the username or password will be either written into the shell or copied into the clipboard.
 
+Shares the Bitwarden session across terminal sessions.
+
 ## Key bindings
 
 | Keys | Action |

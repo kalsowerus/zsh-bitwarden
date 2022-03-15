@@ -4,7 +4,7 @@ function .bw_ensure_unlocked() {
 	local session=$(cat "$HOME/.bwsession" 2>/dev/null)
 	local bw_status=$(bw status --session "$session" 2>/dev/null | jq -r '.status')
 
-	if [ $bw_status = 'locked' ]; then
+	if [[ $bw_status == 'locked' ]]; then
 		# workaround for https://github.com/bitwarden/cli/issues/480
 		if bw list folders --nointeraction --session "$session" >/dev/null 2>&1; then
 			return 0
@@ -17,7 +17,7 @@ function .bw_ensure_unlocked() {
 		local key=$(bw unlock "$reply" --raw)
 		echo "$key" > "$HOME/.bwsession"
 		chmod 0600 "$HOME/.bwsession"
-	elif [ $bw_status = 'unauthenticated' ]; then
+	elif [[ $bw_status == 'unauthenticated' ]]; then
 		zle -I
 		echo 'You are not logged in.'
 		return 1
@@ -38,13 +38,13 @@ function .bw_get() {
 	local result
 	bw_item=$(.bw_select $1)
 	rc=$?
-	if [ $rc -eq 0 ]; then
+	if [[ $rc == 0 ]]; then
 		result=$(echo "$bw_item" | awk -F "$ZSH_BITWARDEN_DELIMITER" '{print $2}')
-	elif [ $rc -eq 1 ]; then
+	elif [[ $rc == 1 ]]; then
 		echo "\nVault is locked.\n" >&2
 		zle reset-prompt
 	fi
-	if [ ! -z "$result" ]; then
+	if [[ ! -z "$result" ]]; then
 		LBUFFER="$LBUFFER$result"
 	fi
 }
@@ -58,9 +58,9 @@ function .bw_copy() {
 	local rc
 	bw_item=$(.bw_select $1)
 	rc=$?
-	if [ $rc -eq 0 ]; then
+	if [[ $rc == 0 ]]; then
 		echo -n "$bw_item" | awk -F $ZSH_BITWARDEN_DELIMITER '{printf "%s",$2}' | eval "$copy_cmd"
-	elif [ $rc -eq 1 ]; then
+	elif [[ $rc == 1 ]]; then
 		echo "\nVault is locked.\n" >&2
 		zle reset-prompt
 	fi

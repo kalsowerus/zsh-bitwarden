@@ -53,7 +53,7 @@ function .bw_copy() {
 	if ! .bw_ensure_unlocked; then
 		return
 	fi
-	local copy_cmd=${ZSH_BITWARDEN_COPY_CMD:-xclip}
+	local copy_cmd=${ZSH_BITWARDEN_COPY_CMD:-clipcopy}
 	local bw_items
 	local rc
 	bw_item=$(.bw_select $1)

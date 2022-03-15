@@ -3,11 +3,14 @@
 - [Bitwarden CLI](https://github.com/bitwarden/cli)
 - jq
 - fzf
-- xclip (or alternative, see configuration below)
+- Oh My Zsh (if `ZSH_BITWARDEN_COPY_CMD` is not set)
 
 # Install (Antigen)
 
 ```zsh
+# Requires oh-my-zsh unless ZSH_BITWARDEN_COPY_CMD is set
+antigen use oh-my-zsh
+
 antigen bundle kalsowerus/zsh-bitwarden
 ```
 
@@ -33,7 +36,7 @@ Shares the Bitwarden session across terminal sessions.
 Contains the command used to copy a username/password to the clipboard.
 The username/password will be piped to the command.
 
-Default: `xclip`
+Default: `clipcopy`
 
 ## `ZSH_BITWARDEN_GET_USERNAME_KEY`
 

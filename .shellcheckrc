@@ -1,0 +1,5 @@
+shell=bash
+
+enable=all
+disable=SC2312
+
